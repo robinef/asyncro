@@ -32,13 +32,13 @@ SOFTWARE.
  * @author robinef@gmail.com
  */
 /**
- * Asynchronous oauth client
+ * Asynchronous OAuth client
  */
 class Auth extends Client {
 
     /**
      *
-     * @var string Oauth client Id 
+     * @var string OAuth client Id 
      */
     var $_clientId = null;
     
@@ -50,7 +50,7 @@ class Auth extends Client {
     
     /**
      *
-     * @var string Oauth client secret
+     * @var string OAuth client secret
      */
     var $_clientSecret = null;
     
@@ -86,7 +86,7 @@ class Auth extends Client {
     }
     
     /**
-     * Make an oauth authenticated request
+     * Make an OAuth authenticated request
      * @param string $url
      * @param function $callback
      * @param string $method
