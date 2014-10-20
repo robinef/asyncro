@@ -57,21 +57,6 @@ class   Client {
         $factory = new \React\HttpClient\Factory();
         $this->_client = $factory->create($this->_loop, $dnsResolver);
     }
-
-    /**
-     * Decode chunked response
-     * @param type $str
-     * @return type
-     */
-    function decodeChunked($str) {
-        for ($res = ''; !empty($str); $str = trim($str)) {
-          $pos = strpos($str, "\r\n");
-          $len = hexdec(substr($str, 0, $pos));
-          $res.= substr($str, $pos + 2, $len);
-          $str = substr($str, $pos + 2 + $len);
-        }
-        return $res;
-    }
     
     /**
      * Add request to async request stack
@@ -93,7 +78,6 @@ class   Client {
             });
       
             $response->on('end', function() use (&$callback, &$buffer) {
-                $buffer = $this->decodeChunked($buffer);
                 $callback($buffer);
             });
         });
