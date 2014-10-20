@@ -3,7 +3,8 @@
     "description": "Asynchronous Oauth client",
     "keywords": ["oauth", "aysnc"],
     "require": {
-        "react/react": "dev-master"
+        "react/react": "dev-master",
+        "guzzlehttp/guzzle": "~5.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.3.*"

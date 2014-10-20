@@ -1,6 +1,7 @@
 <?php
 
 namespace Asyncro;
+
 /*
 The MIT License (MIT)
 
@@ -65,20 +66,23 @@ class Auth extends Client {
     }
     
     /**
-     * Get access token
+     * Get synchronous access token
      * @param string $tokenUrl
      */
     public function getAccessToken($tokenUrl) {
-        
-        $callback = function (&$response) {
-            $data = json_decode($response, true);
-            $this->_accessToken = $data['access_token'];
-        };
-        $this->addRequest($tokenUrl, $callback, "POST", ['Content-Type'=>'application/json'], json_encode([
-					'client_id' => $this->_clientId,
-					'client_secret' => $this->_clientSecret
-					]));
-        $this->run();
+
+        $client = new \GuzzleHttp\Client();
+        try {
+            $res = $client->post($tokenUrl, ['headers' => ['Content-Type'=>'application/json'],
+                                             'body' =>
+                                            json_encode([
+                                                'client_id' => $this->_clientId,
+                                                'client_secret' => $this->_clientSecret
+					])]);
+        } catch (Exception $ex) {}
+     
+        $data = $res->json();
+        $this->_accessToken = $data['access_token'];
     }
     
     /**
@@ -91,9 +95,10 @@ class Auth extends Client {
      */
     public function addAuthenticatedRequest($url, $callback, $method = "GET", $headers = array(), $body = "") {
         //Add OAuth2 authorization header
-        $headers['Authorization'] = 'OAuth oauth_token="'.$this->_accessToken.'", oauth_client_id="'.$this->_clientId.'"';
-        $this->addRequest($url, $callback, $method, $headers, $body);
-        
+        if(!is_null($this->_accessToken)) {
+            $headers['Authorization'] = 'OAuth oauth_token="'.$this->_accessToken.'", oauth_client_id="'.$this->_clientId.'"';
+            $this->addRequest($url, $callback, $method, $headers, $body);
+        }
     }
     
 }
